@@ -8,7 +8,7 @@
 import Amplify
 
 struct DynamicModel: JsonModel {
-    
+
     public let id: String
     public let values: [String: JSONValue]
 

@@ -55,7 +55,7 @@ struct TestJsonModelRegistration: AmplifyModelRegistration {
 
         ModelRegistry.register(modelName: postSchema.name,
                                modelSchema: postSchema,
-                               dynamicType: DynamicModel.self) { (_, _) -> Model in
+                               modelType: DynamicModel.self) { (_, _) -> Model in
                                 DynamicModel(id: "", values: [:])
         }
 
@@ -77,7 +77,7 @@ struct TestJsonModelRegistration: AmplifyModelRegistration {
                                             belongsTo.name: belongsTo])
         ModelRegistry.register(modelName: commentSchema.name,
                                modelSchema: commentSchema,
-                               dynamicType: DynamicModel.self) { (_, _) -> Model in
+                               modelType: DynamicModel.self) { (_, _) -> Model in
                                 DynamicModel(id: "", values: [:])
         }
     }

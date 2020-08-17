@@ -162,7 +162,7 @@ extension ModelField {
             case .hasOne(let associatedKey),
                  .hasMany(let associatedKey):
                 let key = associatedKey ?? associatedModel
-                let schema = ModelRegistry.modelSchema(from: key)
+                let schema = ModelRegistry.modelSchema(from: associatedModel)
                 return schema?.field(withName: key)
             case .none:
                 return nil

@@ -105,50 +105,6 @@ class SQLiteStorageEngineAdapterJsonTests: XCTestCase {
                 expectation.fulfill()
             }
         }
-
         wait(for: [expectation], timeout: 5)
     }
-
-    /// - Given: a list a `Post` instance
-    /// - When:
-    ///   - the `save(post)` is called
-    /// - Then:
-    ///   - call `query(Post, where: title == post.title)` to check
-    ///   if the model was correctly inserted using a predicate
-    func testInsertPostAndSelectByTitle() {
-        let expectation = self.expectation(
-            description: "it should save and select a Post from the database")
-
-        // insert a post
-        let post = Post(title: "title", content: "content", createdAt: .now())
-        storageAdapter.save(post) { saveResult in
-            switch saveResult {
-            case .success:
-                let predicate = Post.keys.title == post.title
-                self.storageAdapter.query(Post.self, predicate: predicate) { queryResult in
-                    switch queryResult {
-                    case .success(let posts):
-                        XCTAssertEqual(posts.count, 1)
-                        if let savedPost = posts.first {
-                            XCTAssert(post.id == savedPost.id)
-                            XCTAssert(post.title == savedPost.title)
-                            XCTAssert(post.content == savedPost.content)
-                            XCTAssertEqual(post.createdAt.iso8601String, savedPost.createdAt.iso8601String)
-                        }
-                        expectation.fulfill()
-                    case .failure(let error):
-                        XCTFail(String(describing: error))
-                        expectation.fulfill()
-                    }
-                }
-            case .failure(let error):
-                XCTFail(String(describing: error))
-                expectation.fulfill()
-            }
-        }
-
-        wait(for: [expectation], timeout: 5)
-    }
-
-
 }

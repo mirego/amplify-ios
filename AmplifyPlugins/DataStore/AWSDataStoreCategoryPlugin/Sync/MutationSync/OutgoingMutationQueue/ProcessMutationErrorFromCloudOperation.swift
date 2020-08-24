@@ -313,7 +313,7 @@ class ProcessMutationErrorFromCloudOperation: AsynchronousOperation {
     private func saveMetadata(storageAdapter: StorageEngineAdapter,
                               inProcessModel: MutationSync<AnyModel>) {
         log.verbose(#function)
-        storageAdapter.save(inProcessModel.syncMetadata, condition: nil) { result in
+        storageAdapter.save(inProcessModel.syncMetadata, modelSchema: inProcessModel.syncMetadata.schema, condition: nil) { result in
             switch result {
             case .failure(let dataStoreError):
                 let error = DataStoreError.unknown("Save metadata failed \(dataStoreError)", "")

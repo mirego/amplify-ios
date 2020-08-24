@@ -130,7 +130,10 @@ final class StorageEngine: StorageEngineBehavior {
         try storageAdapter.setUp(modelSchemas: modelSchemas)
     }
 
-    func save<M: Model>(_ model: M, condition: QueryPredicate? = nil, completion: @escaping DataStoreCallback<M>) {
+    func save<M: Model>(_ model: M,
+                        modelSchema: ModelSchema,
+                        condition: QueryPredicate? = nil,
+                        completion: @escaping DataStoreCallback<M>) {
         // TODO: Refactor this into a proper request/result where the result includes metadata like the derived
         // mutation type
         let modelExists: Bool
@@ -174,7 +177,7 @@ final class StorageEngine: StorageEngineBehavior {
             }
         }
 
-        storageAdapter.save(model, condition: condition, completion: wrappedCompletion)
+        storageAdapter.save(model, modelSchema: model.schema, condition: condition, completion: wrappedCompletion)
     }
 
     func delete<M: Model>(_ modelType: M.Type,
@@ -292,6 +295,7 @@ final class StorageEngine: StorageEngineBehavior {
         do {
             try storageAdapter.transaction {
                 storageAdapter.query(modelType,
+                                     modelSchema: modelType.schema,
                                      predicate: predicate,
                                      sort: nil,
                                      paginationInput: nil,
@@ -328,11 +332,13 @@ final class StorageEngine: StorageEngineBehavior {
     }
 
     func query<M: Model>(_ modelType: M.Type,
+                         modelSchema: ModelSchema,
                          predicate: QueryPredicate? = nil,
                          sort: QuerySortInput? = nil,
                          paginationInput: QueryPaginationInput? = nil,
                          completion: DataStoreCallback<[M]>) {
         return storageAdapter.query(modelType,
+                                    modelSchema: modelSchema,
                                     predicate: predicate,
                                     sort: sort,
                                     paginationInput: paginationInput,

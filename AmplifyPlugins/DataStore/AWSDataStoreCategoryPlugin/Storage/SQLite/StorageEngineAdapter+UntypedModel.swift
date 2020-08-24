@@ -25,7 +25,7 @@ extension SQLiteStorageEngineAdapter {
                 let statement = UpdateStatement(model: untypedModel)
                 _ = try connection.prepare(statement.stringValue).run(statement.variables)
             } else {
-                let statement = InsertStatement(model: untypedModel)
+                let statement = InsertStatement(model: untypedModel, modelSchema: untypedModel.schema)
                 _ = try connection.prepare(statement.stringValue).run(statement.variables)
             }
 

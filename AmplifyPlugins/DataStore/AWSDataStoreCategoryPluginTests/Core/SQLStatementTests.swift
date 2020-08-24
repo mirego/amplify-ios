@@ -137,7 +137,7 @@ class SQLStatementTests: XCTestCase {
                         content: "content",
                         createdAt: .now(),
                         status: .draft)
-        let statement = InsertStatement(model: post)
+        let statement = InsertStatement(model: post, modelSchema: post.schema)
 
         let expectedStatement = """
         insert into Post ("id", "content", "createdAt", "draft", "rating", "status", "title", "updatedAt")
@@ -162,7 +162,7 @@ class SQLStatementTests: XCTestCase {
     func testInsertStatementFromModelWithForeignKey() {
         let post = Post(title: "title", content: "content", createdAt: .now())
         let comment = Comment(content: "comment", createdAt: .now(), post: post)
-        let statement = InsertStatement(model: comment)
+        let statement = InsertStatement(model: comment, modelSchema: comment.schema)
 
         let expectedStatement = """
         insert into Comment ("id", "content", "createdAt", "commentPostId")

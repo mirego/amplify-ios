@@ -82,7 +82,7 @@ class OutgoingMutationQueueTests: SyncEngineTestBase {
                 mutationType: .create,
                 createdAt: .now())
 
-            storageAdapter.save(event) { result in
+            storageAdapter.save(event, modelSchema: event.schema) { result in
                 switch result {
                 case .failure(let dataStoreError):
                     XCTFail(String(describing: dataStoreError))

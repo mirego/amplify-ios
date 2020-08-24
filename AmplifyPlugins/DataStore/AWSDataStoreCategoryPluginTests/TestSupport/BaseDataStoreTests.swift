@@ -80,7 +80,7 @@ class BaseDataStoreTests: XCTestCase {
         let semaphore = DispatchSemaphore(value: 0)
 
         func save(model: M, index: Int) {
-            storageAdapter.save(model) {
+            storageAdapter.save(model, modelSchema: model.schema) {
                 switch $0 {
                 case .success:
                     let nextIndex = index + 1

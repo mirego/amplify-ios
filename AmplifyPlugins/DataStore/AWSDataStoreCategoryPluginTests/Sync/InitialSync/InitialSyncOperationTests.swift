@@ -332,7 +332,7 @@ class InitialSyncOperationTests: XCTestCase {
 
         let syncMetadata = ModelSyncMetadata(id: MockSynced.modelName, lastSync: startDateMilliseconds)
         let syncMetadataSaved = expectation(description: "Sync metadata saved")
-        storageAdapter.save(syncMetadata) { result in
+        storageAdapter.save(syncMetadata, modelSchema: syncMetadata.schema) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTAssertNil(dataStoreError)
@@ -379,7 +379,7 @@ class InitialSyncOperationTests: XCTestCase {
 
         let syncMetadata = ModelSyncMetadata(id: MockSynced.modelName, lastSync: startDateMilliSeconds)
         let syncMetadataSaved = expectation(description: "Sync metadata saved")
-        storageAdapter.save(syncMetadata) { result in
+        storageAdapter.save(syncMetadata, modelSchema: syncMetadata.schema) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTAssertNil(dataStoreError)

@@ -15,6 +15,7 @@ extension MutationEvent {
         let predicate = fields.modelId == modelId && (fields.inProcess == false || fields.inProcess == nil)
 
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate,
                              sort: .ascending(fields.createdAt),
                              paginationInput: nil) { completion($0) }

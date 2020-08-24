@@ -35,17 +35,35 @@ public struct ModelRegistry {
     }
 
     public static func register(modelType: Model.Type) {
+        registerModel(modelType: modelType,
+                      modelSchema: modelType.schema) { (jsonString, jsonDecoder) -> Model in
+                        return try modelType.from(json: jsonString, decoder: jsonDecoder)
+        }
+    }
+    
+    public static func register(modelType: Model.Type,
+                                modelSchema: ModelSchema,
+                                jsonDecoder: @escaping (String, JSONDecoder?) throws -> Model) {
+        registerModel(modelType: modelType,
+                      modelSchema: modelSchema,
+                      jsonDecoder: jsonDecoder)
+    }
+    
+    static func registerModel(modelType: Model.Type,
+                              modelSchema: ModelSchema,
+                              jsonDecoder: @escaping (String, JSONDecoder?) throws -> Model) {
         concurrencyQueue.sync {
-            let modelDecoder: ModelDecoder = { jsonString, jsonDecoder in
-                let model = try modelType.from(json: jsonString, decoder: jsonDecoder)
-                return model
+            let modelDecoder: ModelDecoder = { jsonString, decoder in
+                return try jsonDecoder(jsonString, decoder)
             }
-
-            modelDecoders[modelType.modelName] = modelDecoder
-
-            modelTypes[modelType.modelName] = modelType
-
-            modelSchemaMapping[modelType.modelName] = modelType.schema
+            
+            let modelName = modelSchema.name
+            
+            modelDecoders[modelName] = modelDecoder
+            
+            modelTypes[modelName] = modelType
+            
+            modelSchemaMapping[modelName] = modelSchema
         }
     }
 

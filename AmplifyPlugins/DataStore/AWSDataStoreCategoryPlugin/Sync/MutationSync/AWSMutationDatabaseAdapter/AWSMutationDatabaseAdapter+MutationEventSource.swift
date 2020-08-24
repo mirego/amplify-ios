@@ -22,6 +22,7 @@ extension AWSMutationDatabaseAdapter: MutationEventSource {
         let predicate = fields.inProcess == false || fields.inProcess == nil
 
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate,
                              sort: .ascending(MutationEvent.keys.createdAt),
                              paginationInput: nil) { result in
@@ -46,7 +47,7 @@ extension AWSMutationDatabaseAdapter: MutationEventSource {
                        completion: @escaping DataStoreCallback<MutationEvent>) {
         var inProcessEvent = mutationEvent
         inProcessEvent.inProcess = true
-        storageAdapter.save(inProcessEvent, condition: nil, completion: completion)
+        storageAdapter.save(inProcessEvent, modelSchema: inProcessEvent.schema, condition: nil, completion: completion)
     }
 
 }

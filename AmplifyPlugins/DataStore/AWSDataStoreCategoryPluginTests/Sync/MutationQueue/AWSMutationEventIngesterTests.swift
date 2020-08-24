@@ -87,7 +87,7 @@ class AWSMutationEventIngesterTests: XCTestCase {
         wait(for: [saveCompleted], timeout: 1.0)
 
         let mutationEventQueryCompleted = expectation(description: "Mutation event query completed")
-        storageAdapter.query(MutationEvent.self) { result in
+        storageAdapter.query(MutationEvent.self, modelSchema: MutationEvent.schema) { result in
             defer {
                 mutationEventQueryCompleted.fulfill()
             }

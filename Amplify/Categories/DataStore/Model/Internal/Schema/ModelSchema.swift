@@ -38,13 +38,13 @@ public struct ModelField {
         return name == "id"
     }
 
-    init(name: String,
-         type: ModelFieldType,
-         isRequired: Bool = false,
-         isArray: Bool = false,
-         attributes: [ModelFieldAttribute] = [],
-         association: ModelAssociation? = nil,
-         authRules: AuthRules = []) {
+    public init(name: String,
+                type: ModelFieldType,
+                isRequired: Bool = false,
+                isArray: Bool = false,
+                attributes: [ModelFieldAttribute] = [],
+                association: ModelAssociation? = nil,
+                authRules: AuthRules = []) {
         self.name = name
         self.type = type
         self.isRequired = isRequired
@@ -82,11 +82,11 @@ public struct ModelSchema {
         return primaryKey.value
     }
 
-    init(name: String,
-         pluralName: String? = nil,
-         authRules: AuthRules = [],
-         attributes: [ModelAttribute] = [],
-         fields: ModelFields = [:]) {
+    public init(name: String,
+                pluralName: String? = nil,
+                authRules: AuthRules = [],
+                attributes: [ModelAttribute] = [],
+                fields: ModelFields = [:]) {
         self.name = name
         self.pluralName = pluralName
         self.authRules = authRules

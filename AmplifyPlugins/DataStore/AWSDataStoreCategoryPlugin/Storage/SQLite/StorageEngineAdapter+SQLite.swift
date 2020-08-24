@@ -96,10 +96,13 @@ final class SQLiteStorageEngineAdapter: StorageEngineAdapter {
         }
     }
 
-    func save<M: Model>(_ model: M, condition: QueryPredicate? = nil, completion: DataStoreCallback<M>) {
+    func save<M: Model>(_ model: M,
+                        modelSchema: ModelSchema,
+                        condition: QueryPredicate? = nil,
+                        completion: DataStoreCallback<M>) {
         do {
             let modelType = type(of: model)
-            let modelExists = try exists(modelType.schema, withId: model.id)
+            let modelExists = try exists(modelSchema, withId: model.id)
 
             if !modelExists {
                 if condition != nil {
@@ -110,7 +113,7 @@ final class SQLiteStorageEngineAdapter: StorageEngineAdapter {
                     return
                 }
 
-                let statement = InsertStatement(model: model)
+                let statement = InsertStatement(model: model, modelSchema: modelSchema)
                 _ = try connection.prepare(statement.stringValue).run(statement.variables)
             }
 
@@ -131,7 +134,7 @@ final class SQLiteStorageEngineAdapter: StorageEngineAdapter {
             }
 
             // load the recent saved instance and pass it back to the callback
-            query(modelType, predicate: field("id").eq(model.id)) {
+            query(modelType, modelSchema: modelSchema, predicate: field("id").eq(model.id)) {
                 switch $0 {
                 case .success(let result):
                     if let saved = result.first {
@@ -187,12 +190,13 @@ final class SQLiteStorageEngineAdapter: StorageEngineAdapter {
     }
 
     func query<M: Model>(_ modelType: M.Type,
+                         modelSchema: ModelSchema,
                          predicate: QueryPredicate? = nil,
                          sort: QuerySortInput? = nil,
                          paginationInput: QueryPaginationInput? = nil,
                          completion: DataStoreCallback<[M]>) {
         do {
-            let statement = SelectStatement(from: modelType.schema,
+            let statement = SelectStatement(from: modelSchema,
                                             predicate: predicate,
                                             sort: sort,
                                             paginationInput: paginationInput)

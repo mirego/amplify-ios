@@ -173,7 +173,7 @@ class SyncEngineTestBase: XCTestCase {
                                               inProcess: inProcess)
 
         let mutationEventSaved = expectation(description: "Preloaded mutation event saved")
-        storageAdapter.save(mutationEvent) { result in
+        storageAdapter.save(mutationEvent, modelSchema: mutationEvent.schema) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTFail(String(describing: dataStoreError))
@@ -187,7 +187,7 @@ class SyncEngineTestBase: XCTestCase {
     /// Saves a Post record directly to StorageAdapter. Used for pre-populating database before tests
     func savePost(_ post: Post) throws {
         let postSaved = expectation(description: "Preloaded mutation event saved")
-        storageAdapter.save(post) { result in
+        storageAdapter.save(post, modelSchema: post.schema) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTFail(String(describing: dataStoreError))

@@ -37,7 +37,7 @@ class ModelReconciliationDeleteTests: SyncEngineTestBase {
                                                         lastChangedAt: Date().unixSeconds,
                                                         version: 2)
         let localMetadataSaved = expectation(description: "Local metadata saved")
-        storageAdapter.save(localSyncMetadata) { _ in localMetadataSaved.fulfill() }
+        storageAdapter.save(localSyncMetadata, modelSchema: localSyncMetadata.schema) { _ in localMetadataSaved.fulfill() }
         wait(for: [localMetadataSaved], timeout: 1.0)
 
         var valueListenerFromRequest: MutationSyncInProcessListener?
@@ -205,7 +205,7 @@ class ModelReconciliationDeleteTests: SyncEngineTestBase {
                             let onUpdateListener: MutationSyncInProcessListener = { event in
                                 switch event {
                                 case .data(.success(let mutationEvent)):
-                                    self.storageAdapter.save(mutationEvent.syncMetadata) { result in
+                                    self.storageAdapter.save(mutationEvent.syncMetadata, modelSchema: mutationEvent.syncMetadata.schema) { result in
                                         switch result {
                                         case .success(let syncMetaData):
                                             let payload = HubPayload(

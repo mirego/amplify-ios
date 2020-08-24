@@ -114,6 +114,7 @@ class MockSQLiteStorageEngineAdapter: StorageEngineAdapter {
     }
 
     func save<M: Model>(_ model: M,
+                        modelSchema: ModelSchema,
                         condition: QueryPredicate?,
                         completion: @escaping DataStoreCallback<M>) {
         if let responder = responders[.saveModelCompletion] as? SaveModelCompletionResponder<M> {
@@ -132,6 +133,7 @@ class MockSQLiteStorageEngineAdapter: StorageEngineAdapter {
     }
 
     func query<M: Model>(_ modelType: M.Type,
+                         modelSchema: ModelSchema,
                          predicate: QueryPredicate?,
                          sort: QuerySortInput?,
                          paginationInput: QueryPaginationInput?,
@@ -186,7 +188,7 @@ class MockStorageEngineBehavior: StorageEngineBehavior {
     func setUp(modelSchemas: [ModelSchema]) throws {
     }
 
-    func save<M: Model>(_ model: M, condition: QueryPredicate?, completion: @escaping DataStoreCallback<M>) {
+    func save<M: Model>(_ model: M, modelSchema: ModelSchema, condition: QueryPredicate?, completion: @escaping DataStoreCallback<M>) {
         XCTFail("Not expected to execute")
     }
 
@@ -203,6 +205,7 @@ class MockStorageEngineBehavior: StorageEngineBehavior {
     }
 
     func query<M: Model>(_ modelType: M.Type,
+                         modelSchema: ModelSchema,
                          predicate: QueryPredicate?,
                          sort: QuerySortInput?,
                          paginationInput: QueryPaginationInput?,

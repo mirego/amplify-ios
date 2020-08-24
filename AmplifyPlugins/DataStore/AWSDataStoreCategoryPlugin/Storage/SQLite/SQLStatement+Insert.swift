@@ -15,9 +15,9 @@ struct InsertStatement: SQLStatement {
     let modelSchema: ModelSchema
     let variables: [Binding?]
 
-    init(model: Model) {
-        self.modelSchema = model.schema
-        self.variables = model.sqlValues(for: modelSchema.columns)
+    init(model: Model, modelSchema: ModelSchema) {
+        self.modelSchema = modelSchema
+        self.variables = model.sqlValues(for: modelSchema.columns, modelSchema: modelSchema)
     }
 
     var stringValue: String {

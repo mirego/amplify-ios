@@ -11,8 +11,10 @@ import AWSPluginsCore
 extension AWSDataStorePlugin: DataStoreBaseBehavior {
 
     public func save<M: Model>(_ model: M,
+                               modelSchema: ModelSchema,
                                where condition: QueryPredicate? = nil,
                                completion: @escaping DataStoreCallback<M>) {
+
         log.verbose("Saving: \(model) with condition: \(String(describing: condition))")
         reinitStorageEngineIfNeeded()
 
@@ -24,7 +26,7 @@ extension AWSDataStorePlugin: DataStoreBaseBehavior {
                 throw DataStoreError.configuration("Unable to get storage adapter",
                                                    "")
             }
-            modelExists = try engine.storageAdapter.exists(M.schema, withId: model.id, predicate: nil)
+            modelExists = try engine.storageAdapter.exists(modelSchema, withId: model.id, predicate: nil)
         } catch {
             if let dataStoreError = error as? DataStoreError {
                 completion(.failure(dataStoreError))
@@ -52,9 +54,16 @@ extension AWSDataStorePlugin: DataStoreBaseBehavior {
         }
 
         storageEngine.save(model,
+                           modelSchema: modelSchema,
                            condition: condition,
                            completion: publishingCompletion)
 
+    }
+
+    public func save<M: Model>(_ model: M,
+                               where condition: QueryPredicate? = nil,
+                               completion: @escaping DataStoreCallback<M>) {
+        save(model, modelSchema: M.schema, where: condition, completion: completion)
     }
 
     public func query<M: Model>(_ modelType: M.Type,
@@ -82,8 +91,23 @@ extension AWSDataStorePlugin: DataStoreBaseBehavior {
                                 sort sortInput: QuerySortInput? = nil,
                                 paginate paginationInput: QueryPaginationInput? = nil,
                                 completion: DataStoreCallback<[M]>) {
+        query(modelType,
+              modelSchema: modelType.schema,
+              where: predicate,
+              sort: sortInput,
+              paginate: paginationInput,
+              completion: completion)
+    }
+    
+    public func query<M: Model>(_ modelType: M.Type,
+                                modelSchema: ModelSchema,
+                                where predicate: QueryPredicate? = nil,
+                                sort sortInput: QuerySortInput? = nil,
+                                paginate paginationInput: QueryPaginationInput? = nil,
+                                completion: DataStoreCallback<[M]>) {
         reinitStorageEngineIfNeeded()
         storageEngine.query(modelType,
+                            modelSchema: modelType.schema,
                             predicate: predicate,
                             sort: sortInput,
                             paginationInput: paginationInput,
@@ -166,6 +190,7 @@ extension AWSDataStorePlugin: DataStoreBaseBehavior {
         if #available(iOS 13.0, *) {
             let metadata = MutationSyncMetadata.keys
             storageEngine.query(MutationSyncMetadata.self,
+                                modelSchema: MutationSyncMetadata.schema,
                                 predicate: metadata.id == model.id,
                                 sort: nil,
                                 paginationInput: .firstResult) {

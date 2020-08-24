@@ -20,6 +20,7 @@ final class MutationEventClearState {
         let predicate = fields.inProcess == true
 
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate,
                              sort: .ascending(fields.createdAt),
                              paginationInput: nil) { result in
@@ -42,7 +43,7 @@ final class MutationEventClearState {
         for mutationEvent in mutationEvents {
             var inProcessEvent = mutationEvent
             inProcessEvent.inProcess = false
-            storageAdapter.save(inProcessEvent, condition: nil, completion: { result in
+            storageAdapter.save(inProcessEvent, modelSchema: inProcessEvent.schema, condition: nil, completion: { result in
                 switch result {
                 case .success:
                     numMutationEventsUpdated += 1

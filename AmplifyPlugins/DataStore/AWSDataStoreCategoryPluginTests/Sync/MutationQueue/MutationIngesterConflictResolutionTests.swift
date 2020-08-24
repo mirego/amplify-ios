@@ -58,6 +58,7 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         let mutationEventVerified = expectation(description: "Verified mutation event")
         let predicate = MutationEvent.keys.id == SyncEngineTestBase.mutationEventId(for: post)
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate) { result in
                                 switch result {
                                 case .failure(let dataStoreError):
@@ -110,6 +111,7 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         let mutationEventVerified = expectation(description: "Verified mutation event")
         let predicate = MutationEvent.keys.id == SyncEngineTestBase.mutationEventId(for: post)
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate) { result in
                                 switch result {
                                 case .failure(let dataStoreError):
@@ -165,6 +167,7 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         let mutationEventVerified = expectation(description: "Verified mutation event")
         let predicate = MutationEvent.keys.id == SyncEngineTestBase.mutationEventId(for: post)
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate) { result in
                                 switch result {
                                 case .failure(let dataStoreError):
@@ -215,6 +218,7 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         let mutationEventVerified = expectation(description: "Verified mutation event")
         let predicate = MutationEvent.keys.id == SyncEngineTestBase.mutationEventId(for: post)
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate) { result in
                                 switch result {
                                 case .failure(let dataStoreError):
@@ -269,6 +273,7 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         let mutationEventVerified = expectation(description: "Verified mutation event")
         let predicate = MutationEvent.keys.id == SyncEngineTestBase.mutationEventId(for: post)
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate) { result in
                                 switch result {
                                 case .failure(let dataStoreError):
@@ -324,6 +329,7 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         let mutationEventVerified = expectation(description: "Verified mutation event")
         let predicate = MutationEvent.keys.id == SyncEngineTestBase.mutationEventId(for: post)
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate) { result in
                                 switch result {
                                 case .failure(let dataStoreError):
@@ -378,6 +384,7 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         let mutationEventVerified = expectation(description: "Verified mutation event")
         let predicate = MutationEvent.keys.id == SyncEngineTestBase.mutationEventId(for: post)
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate) { result in
                                 switch result {
                                 case .failure(let dataStoreError):
@@ -434,6 +441,7 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         let mutationEventVerified = expectation(description: "Verified mutation event")
         let predicate = MutationEvent.keys.id == SyncEngineTestBase.mutationEventId(for: post)
         storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
                              predicate: predicate) { result in
                                 switch result {
                                 case .failure(let dataStoreError):
@@ -485,7 +493,9 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         wait(for: [saveResultReceived], timeout: 1.0)
 
         let mutationEventVerified = expectation(description: "Verified mutation event")
-        storageAdapter.query(MutationEvent.self, predicate: nil) { result in
+        storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
+                             predicate: nil) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTAssertNil(dataStoreError)
@@ -536,7 +546,9 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         wait(for: [saveResultReceived], timeout: 1.0)
 
         let mutationEventVerified = expectation(description: "Verified mutation event")
-        storageAdapter.query(MutationEvent.self, predicate: nil) { result in
+        storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
+                             predicate: nil) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTAssertNil(dataStoreError)
@@ -588,7 +600,9 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         wait(for: [saveResultReceived], timeout: 1.0)
 
         let mutationEventVerified = expectation(description: "Verified mutation event")
-        storageAdapter.query(MutationEvent.self, predicate: nil) { result in
+        storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
+                             predicate: nil) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTAssertNil(dataStoreError)
@@ -641,7 +655,9 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         wait(for: [saveResultReceived], timeout: 1.0)
 
         let mutationEventVerified = expectation(description: "Verified mutation event")
-        storageAdapter.query(MutationEvent.self, predicate: nil) { result in
+        storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
+                             predicate: nil) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTAssertNil(dataStoreError)
@@ -693,7 +709,9 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         wait(for: [saveResultReceived], timeout: 1.0)
 
         let mutationEventVerified = expectation(description: "Verified mutation event")
-        storageAdapter.query(MutationEvent.self, predicate: nil) { result in
+        storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
+                             predicate: nil) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTAssertNil(dataStoreError)
@@ -746,7 +764,9 @@ class MutationIngesterConflictResolutionTests: SyncEngineTestBase {
         wait(for: [deleteResultReceived], timeout: 1.0)
 
         let mutationEventVerified = expectation(description: "Verified mutation event")
-        storageAdapter.query(MutationEvent.self, predicate: nil) { result in
+        storageAdapter.query(MutationEvent.self,
+                             modelSchema: MutationEvent.schema,
+                             predicate: nil) { result in
             switch result {
             case .failure(let dataStoreError):
                 XCTAssertNil(dataStoreError)

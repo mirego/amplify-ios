@@ -206,7 +206,7 @@ extension AWSMutationDatabaseAdapter: MutationEventIngester {
         if nextEventPromise != nil {
             eventToPersist.inProcess = true
         }
-        storageAdapter.save(eventToPersist, condition: nil) { result in
+        storageAdapter.save(eventToPersist, modelSchema: eventToPersist.schema, condition: nil) { result in
             switch result {
             case .failure(let dataStoreError):
                 self.log.verbose("\(#function): Error saving mutation event: \(dataStoreError)")

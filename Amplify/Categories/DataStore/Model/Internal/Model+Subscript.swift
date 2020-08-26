@@ -15,8 +15,8 @@ extension Model {
     /// - Warning: Although this has `public` access, it is intended for internal use and should not be used directly
     ///   by host applications. The behavior of this may change without warning.
     public subscript(_ key: String) -> Any?? {
-        if self is JsonModel {
-            let value = (self as! JsonModel).internal_value(for: key)
+        if self is JsonModel,
+            let value = (self as? JsonModel)?.internal_value(for: key) {
             return value
         }
         let mirror = Mirror(reflecting: self)

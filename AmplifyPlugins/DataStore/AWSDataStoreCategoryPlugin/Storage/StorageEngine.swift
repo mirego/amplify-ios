@@ -138,7 +138,7 @@ final class StorageEngine: StorageEngineBehavior {
         // mutation type
         let modelExists: Bool
         do {
-            modelExists = try storageAdapter.exists(M.schema, withId: model.id, predicate: nil)
+            modelExists = try storageAdapter.exists(modelSchema, withId: model.id, predicate: nil)
         } catch {
             let dataStoreError = DataStoreError.invalidOperation(causedBy: error)
             completion(.failure(dataStoreError))
@@ -177,7 +177,7 @@ final class StorageEngine: StorageEngineBehavior {
             }
         }
 
-        storageAdapter.save(model, modelSchema: model.schema, condition: condition, completion: wrappedCompletion)
+        storageAdapter.save(model, modelSchema: modelSchema, condition: condition, completion: wrappedCompletion)
     }
 
     func delete<M: Model>(_ modelType: M.Type,

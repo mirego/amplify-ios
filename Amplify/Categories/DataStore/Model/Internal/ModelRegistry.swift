@@ -40,7 +40,7 @@ public struct ModelRegistry {
                         return try modelType.from(json: jsonString, decoder: jsonDecoder)
         }
     }
-    
+
     public static func register(modelType: Model.Type,
                                 modelSchema: ModelSchema,
                                 jsonDecoder: @escaping (String, JSONDecoder?) throws -> Model) {
@@ -48,7 +48,7 @@ public struct ModelRegistry {
                       modelSchema: modelSchema,
                       jsonDecoder: jsonDecoder)
     }
-    
+
     static func registerModel(modelType: Model.Type,
                               modelSchema: ModelSchema,
                               jsonDecoder: @escaping (String, JSONDecoder?) throws -> Model) {
@@ -56,13 +56,13 @@ public struct ModelRegistry {
             let modelDecoder: ModelDecoder = { jsonString, decoder in
                 return try jsonDecoder(jsonString, decoder)
             }
-            
+
             let modelName = modelSchema.name
-            
+
             modelDecoders[modelName] = modelDecoder
-            
+
             modelTypes[modelName] = modelType
-            
+
             modelSchemaMapping[modelName] = modelSchema
         }
     }

@@ -98,7 +98,7 @@ extension AWSDataStorePlugin: DataStoreBaseBehavior {
               paginate: paginationInput,
               completion: completion)
     }
-    
+
     public func query<M: Model>(_ modelType: M.Type,
                                 modelSchema: ModelSchema,
                                 where predicate: QueryPredicate? = nil,

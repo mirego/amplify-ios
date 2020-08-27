@@ -86,11 +86,7 @@ final class SQLiteStorageEngineAdapter: StorageEngineAdapter {
 
         let createTableStatements = modelSchemas
             .sortByDependencyOrder()
-<<<<<<< HEAD
-            .map { CreateTableStatement(modelSchema: $0.schema).stringValue }
-=======
             .map { CreateTableStatement(modelSchema: $0).stringValue }
->>>>>>> refactor(datastore): Changed exists api to accept ModelSchema instead of Model.Type
             .joined(separator: "\n")
 
         do {

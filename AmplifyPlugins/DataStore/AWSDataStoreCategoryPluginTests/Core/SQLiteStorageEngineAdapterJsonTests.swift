@@ -180,4 +180,50 @@ class SQLiteStorageEngineAdapterJsonTests: XCTestCase {
 
         wait(for: [expectation], timeout: 5)
     }
+
+    func testInsertPostAndComment() {
+        let expectation = self.expectation(
+            description: "it should save and select a Post from the database")
+
+        // insert a post
+        let titleValue = "title value"
+        let contentValue = "post content information"
+        let createdDate = "2020-08-24T00:44:17.857Z"
+        let post = ["title": .string(titleValue),
+                    "content": .string(contentValue),
+                    "createdAt": .string(createdDate)] as [String: JSONValue]
+        let postModel = DynamicModel(values: post)
+        guard let postSchema = ModelRegistry.modelSchema(from: "Post") else {
+            XCTFail("Model Schema should not be nil")
+            return
+        }
+
+        let commentContentValue = "comment content value"
+        let comment = ["content": .string(commentContentValue),
+                    "createdAt": .string(createdDate),
+                    "post": .string(postModel.id)] as [String: JSONValue]
+        let commentModel = DynamicModel(values: comment)
+        guard let commentSchema = ModelRegistry.modelSchema(from: "Comment") else {
+            XCTFail("Model Schema should not be nil")
+            return
+        }
+        storageAdapter.save(postModel, modelSchema: postSchema) { saveResult in
+            switch saveResult {
+            case .success:
+                storageAdapter.save(commentModel, modelSchema: commentSchema) { commentSaveResult in
+                    switch commentSaveResult {
+                    case .success(let savedComment):
+                        print(savedComment)
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+                 expectation.fulfill()
+            case .failure(let error):
+                XCTFail(String(describing: error))
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 5)
+    }
 }

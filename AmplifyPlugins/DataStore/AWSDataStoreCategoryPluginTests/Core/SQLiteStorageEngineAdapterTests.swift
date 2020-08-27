@@ -93,6 +93,33 @@ class SQLiteStorageEngineAdapterTests: BaseDataStoreTests {
         wait(for: [expectation], timeout: 5)
     }
 
+    func testInsertPostAndComment() {
+        let expectation = self.expectation(
+            description: "it should save and select a Post from the database")
+
+        // insert a post
+        let post = Post(title: "title", content: "content", createdAt: .now())
+        let comment = Comment(content: "Content", createdAt: .now(), post: post)
+        storageAdapter.save(post, modelSchema: post.schema) { saveResult in
+            switch saveResult {
+            case .success:
+                storageAdapter.save(comment, modelSchema: Comment.schema) { commentSaveResult in
+                    switch commentSaveResult {
+                    case .success(let comment):
+                        print(comment)
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            case .failure(let error):
+                XCTFail(String(describing: error))
+                expectation.fulfill()
+            }
+        }
+
+        wait(for: [expectation], timeout: 25)
+    }
+
     /// - Given: a list a `Post` instance
     /// - When:
     ///   - the `save(post)` is called

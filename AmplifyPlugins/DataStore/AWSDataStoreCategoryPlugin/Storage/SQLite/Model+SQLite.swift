@@ -90,9 +90,13 @@ extension Model {
             // safely attempt a cast to Persistable below.
 
             // if value is an associated model, get its id
-            if let value = value as? Model, field.isForeignKey {
-                let associatedModel: Model.Type = type(of: value)
-                return value[associatedModel.schema.primaryKey.name] as? String
+            if field.isForeignKey {
+                if let value = value as? Model {
+                    let associatedModel: Model.Type = type(of: value)
+                    return value[associatedModel.schema.primaryKey.name] as? String
+                } else if let value = value as? String {
+                    return value
+                }
             }
 
             // otherwise, delegate to the value converter

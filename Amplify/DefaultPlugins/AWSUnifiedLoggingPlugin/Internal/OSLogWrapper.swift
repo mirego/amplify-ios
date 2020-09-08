@@ -4,11 +4,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 //
-
+#if canImport(os)
 import os.log
+#endif
 
 final class OSLogWrapper: Logger {
-    private let osLog: OSLog
+    private var _osLog: Any? = nil
+    
+    @available(iOS 10.0, *)
+    private var osLog: OSLog {
+        return _osLog as! OSLog
+    }
+    
 
     var getLogLevel: () -> LogLevel
 
@@ -21,12 +28,21 @@ final class OSLogWrapper: Logger {
         }
     }
 
+    @available(iOS 10.0, *)
     init(osLog: OSLog, getLogLevel: @escaping () -> LogLevel) {
-        self.osLog = osLog
+        self._osLog = osLog
+        self.getLogLevel = getLogLevel
+    }
+    
+    init(getLogLevel: @escaping () -> LogLevel) {
         self.getLogLevel = getLogLevel
     }
 
     public func error(_ message: @autoclosure () -> String) {
+        guard #available(iOS 10.0, *) else {
+            return
+        }
+        
         // Always logged, no conditional check needed
         os_log("%@",
                log: osLog,
@@ -35,6 +51,10 @@ final class OSLogWrapper: Logger {
     }
 
     public func error(error: Error) {
+        guard #available(iOS 10.0, *) else {
+            return
+        }
+        
         // Always logged, no conditional check needed
         os_log("%@",
                log: osLog,
@@ -46,18 +66,26 @@ final class OSLogWrapper: Logger {
         guard logLevel.rawValue >= LogLevel.warn.rawValue else {
             return
         }
-
+        
+        guard #available(iOS 10.0, *) else {
+            return
+        }
+        
         os_log("%@",
                log: osLog,
                type: OSLogType.info,
                message())
     }
-
+    
     public func info(_ message: @autoclosure () -> String) {
         guard logLevel.rawValue >= LogLevel.info.rawValue else {
             return
         }
-
+        
+        guard #available(iOS 10.0, *) else {
+            return
+        }
+        
         os_log("%@",
                log: osLog,
                type: OSLogType.info,
@@ -68,7 +96,11 @@ final class OSLogWrapper: Logger {
         guard logLevel.rawValue >= LogLevel.debug.rawValue else {
             return
         }
-
+        
+        guard #available(iOS 10.0, *) else {
+            return
+        }
+        
         os_log("%@",
                log: osLog,
                type: OSLogType.debug,
@@ -77,6 +109,10 @@ final class OSLogWrapper: Logger {
 
     public func verbose(_ message: @autoclosure () -> String) {
         guard logLevel.rawValue >= LogLevel.verbose.rawValue else {
+            return
+        }
+        
+        guard #available(iOS 10.0, *) else {
             return
         }
 

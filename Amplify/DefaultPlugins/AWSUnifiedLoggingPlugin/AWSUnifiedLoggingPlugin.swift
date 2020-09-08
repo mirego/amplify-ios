@@ -31,10 +31,15 @@ final public class AWSUnifiedLoggingPlugin: LoggingCategoryPlugin {
     /// Initializes the logging system with a default log, and immediately registers a default logger
     public init() {
         self.subsystem = Bundle.main.bundleIdentifier ?? "com.amazonaws.amplify.AWSUnifiedLoggingPlugin"
-
-        let defaultOSLog = OSLog(subsystem: subsystem, category: AWSUnifiedLoggingPlugin.defaultCategory)
-        let wrapper = OSLogWrapper(osLog: defaultOSLog,
-                                   getLogLevel: { Amplify.Logging.logLevel })
+        
+        let wrapper: OSLogWrapper
+        
+        if #available(iOS 10.0, *) {
+            let defaultOSLog = OSLog(subsystem: subsystem, category: AWSUnifiedLoggingPlugin.defaultCategory)
+            wrapper = OSLogWrapper(osLog: defaultOSLog, getLogLevel: { Amplify.Logging.logLevel })
+        } else {
+            wrapper = OSLogWrapper(getLogLevel: { Amplify.Logging.logLevel })
+        }
         registeredLogs["default"] = wrapper
     }
 
@@ -67,10 +72,17 @@ final public class AWSUnifiedLoggingPlugin: LoggingCategoryPlugin {
             if let wrapper = registeredLogs[key] {
                 return wrapper
             }
+            
+            let wrapper: OSLogWrapper
+            
+            if #available(iOS 10.0, *) {
+                let osLog = OSLog(subsystem: subsystem, category: category)
+                wrapper = OSLogWrapper(osLog: osLog,
+                                           getLogLevel: { Amplify.Logging.logLevel })
+            } else {
+                wrapper = OSLogWrapper(getLogLevel: { Amplify.Logging.logLevel })
+            }
 
-            let osLog = OSLog(subsystem: subsystem, category: category)
-            let wrapper = OSLogWrapper(osLog: osLog,
-                                       getLogLevel: { Amplify.Logging.logLevel })
             registeredLogs[key] = wrapper
             return wrapper
         }

@@ -27,7 +27,11 @@ extension AuthenticationProviderAdapter {
         // Stop the execution here if we are not running on the main thread.
         // There is no point on returning an error back to the developer, because
         // they do not control how the UI is presented.
-        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+        if #available(iOS 10.0, *) {
+            dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+        } else if !Thread.isMainThread {
+            return
+        }
 
         let signOutOptions = SignOutOptions(signOutGlobally: isGlobalSignout, invalidateTokens: true)
         awsMobileClient.signOut(options: signOutOptions) { [weak self] error in

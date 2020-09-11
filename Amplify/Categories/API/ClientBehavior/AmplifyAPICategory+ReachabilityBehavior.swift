@@ -6,8 +6,11 @@
 //
 
 import Foundation
+#if canImport(Combine)
 import Combine
+#endif
 extension AmplifyAPICategory: APICategoryReachabilityBehavior {
+    #if canImport(Combine)
     @available(iOS 13.0, *)
     public func reachabilityPublisher(for apiName: String?) throws -> AnyPublisher<ReachabilityUpdate, Never>? {
         return try plugin.reachabilityPublisher(for: apiName)
@@ -17,4 +20,5 @@ extension AmplifyAPICategory: APICategoryReachabilityBehavior {
     public func reachabilityPublisher() throws -> AnyPublisher<ReachabilityUpdate, Never>? {
         return try plugin.reachabilityPublisher(for: nil)
     }
+    #endif
 }

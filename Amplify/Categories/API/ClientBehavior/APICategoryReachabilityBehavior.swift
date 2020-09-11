@@ -6,8 +6,11 @@
 //
 
 import Foundation
+#if canImport(Combine)
 import Combine
+#endif
 public protocol APICategoryReachabilityBehavior {
+    #if canImport(Combine)
     /// Attempts to create and start a reachability client for a host that corresponds to the apiName, and then
     /// returns the associated Publisher which vends ReachabiltyUpdates
     /// - Parameters:
@@ -18,5 +21,5 @@ public protocol APICategoryReachabilityBehavior {
 
     @available(iOS 13.0, *)
     func reachabilityPublisher() throws -> AnyPublisher<ReachabilityUpdate, Never>?
-
+    #endif
 }

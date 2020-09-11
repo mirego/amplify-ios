@@ -5,7 +5,9 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+#if canImport(Combine)
 import Combine
+#endif
 
 public typealias DataStoreCategoryBehavior = DataStoreBaseBehavior & DataStoreSubscribeBehavior
 
@@ -60,8 +62,10 @@ public protocol DataStoreBaseBehavior {
 }
 
 public protocol DataStoreSubscribeBehavior {
+    #if canImport(Combine)
     /// Returns a Publisher for model changes (create, updates, delete)
     /// - Parameter modelType: The model type to observe
     @available(iOS 13.0, *)
     func publisher<M: Model>(for modelType: M.Type) -> AnyPublisher<MutationEvent, DataStoreError>
+    #endif
 }

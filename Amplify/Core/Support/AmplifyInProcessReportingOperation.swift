@@ -5,7 +5,9 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+#if canImport(Combine)
 import Combine
+#endif
 import Foundation
 
 /// An AmplifyOperation that emits InProcess values intermittently during the operation.
@@ -41,9 +43,11 @@ open class AmplifyInProcessReportingOperation<
 
         super.init(categoryType: categoryType, eventName: eventName, request: request, resultListener: resultListener)
 
+        #if canImport(Combine)
         if #available(iOS 13.0, *) {
             inProcessSubject = PassthroughSubject<InProcess, Never>()
         }
+        #endif
 
         // If the inProcessListener is present, we need to register a hub event listener for it, and ensure we
         // automatically unsubscribe when we receive a completion event for the operation
@@ -83,9 +87,11 @@ open class AmplifyInProcessReportingOperation<
     /// Classes that override this method must emit a completion to the `inProcessPublisher` upon cancellation
     open override func cancel() {
         super.cancel()
+        #if canImport(Combine)
         if #available(iOS 13.0, *) {
             publish(completion: .finished)
         }
+        #endif
     }
 
     /// Invokes `super.dispatch()`. On iOS 13+, this method first publishes a
@@ -94,9 +100,11 @@ open class AmplifyInProcessReportingOperation<
     /// - Parameter result: The OperationResult to dispatch to the hub as part of the
     ///   HubPayload
     public override func dispatch(result: OperationResult) {
+        #if canImport(Combine)
         if #available(iOS 13.0, *) {
             publish(completion: .finished)
         }
+        #endif
         super.dispatch(result: result)
     }
 
@@ -110,9 +118,11 @@ public extension AmplifyInProcessReportingOperation {
     /// `AmplifyOperationContext` object from the operation's `id`, and `request`
     /// - Parameter result: The OperationResult to dispatch to the hub as part of the HubPayload
     func dispatchInProcess(data: InProcess) {
+        #if canImport(Combine)
         if #available(iOS 13.0, *) {
             publish(inProcessValue: data)
         }
+        #endif
 
         let channel = HubChannel(from: categoryType)
         let context = AmplifyOperationContext(operationId: id, request: request)

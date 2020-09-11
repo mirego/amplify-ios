@@ -5,6 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+#if canImport(Combine)
 import Combine
 
 @available(iOS 13.0, *)
@@ -52,3 +53,4 @@ extension HubCategoryBehavior {
     }
 
 }
+#endif

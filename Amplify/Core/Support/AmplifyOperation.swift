@@ -5,7 +5,9 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+#if canImport(Combine)
 import Combine
+#endif
 import Foundation
 
 /// An abstract representation of an Amplify unit of work. Subclasses may aggregate multiple work items
@@ -111,9 +113,11 @@ open class AmplifyOperation<Request: AmplifyOperationRequest, Success, Failure: 
 
         super.init()
 
+        #if canImport(Combine)
         if #available(iOS 13.0, *) {
             resultFuture = Future<Success, Failure> { self.resultPromise = $0 }
         }
+        #endif
 
         if let resultListener = resultListener {
             self.resultListenerUnsubscribeToken = subscribe(resultListener: resultListener)
@@ -148,6 +152,7 @@ open class AmplifyOperation<Request: AmplifyOperationRequest, Success, Failure: 
     /// Classes that override this method must emit a completion to the `resultPublisher` upon cancellation
     open override func cancel() {
         super.cancel()
+        #if canImport(Combine)
         if #available(iOS 13.0, *) {
             let cancellationError = Failure(
                 errorDescription: "Operation cancelled",
@@ -156,6 +161,7 @@ open class AmplifyOperation<Request: AmplifyOperationRequest, Success, Failure: 
             )
             publish(result: .failure(cancellationError))
         }
+        #endif
     }
 
     /// Dispatches an event to the hub. Internally, creates an
@@ -165,9 +171,11 @@ open class AmplifyOperation<Request: AmplifyOperationRequest, Success, Failure: 
     /// - Parameter result: The OperationResult to dispatch to the hub as part of the
     ///   HubPayload
     public func dispatch(result: OperationResult) {
+        #if canImport(Combine)
         if #available(iOS 13.0, *) {
             publish(result: result)
         }
+        #endif
 
         let channel = HubChannel(from: categoryType)
         let context = AmplifyOperationContext(operationId: id, request: request)

@@ -5,6 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+#if canImport(Combine)
 import Combine
 import Foundation
 
@@ -77,3 +78,4 @@ public extension AmplifyOperation
         internalResultPublisher
     }
 }
+#endif

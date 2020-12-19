@@ -153,7 +153,7 @@ extension AuthenticationProviderAdapter {
                         guard let self = self else { return }
 
                         if let error = error {
-                            let authError = self.convertSignUIErrorToAuthError(error)
+                            let authError = self.convertSignInUIErrorToAuthError(error)
                             completionHandler(.failure(authError))
                             return
                         }
@@ -187,7 +187,13 @@ extension AuthenticationProviderAdapter {
         return .failure(authError)
     }
 
-    private func convertSignUIErrorToAuthError(_ error: Error) -> AuthError {
+    private func convertSignInUIErrorToAuthError(_ error: Error) -> AuthError {
+        if AuthErrorHelper.didUserCancelHostedUI(error) {
+            return AuthError.service(
+                AuthPluginErrorConstants.hostedUIUserCancelledError.errorDescription,
+                AuthPluginErrorConstants.hostedUIUserCancelledError.recoverySuggestion,
+                AWSCognitoAuthError.userCancelled)
+        }
         if let awsMobileClientError = error as? AWSMobileClientError {
             switch awsMobileClientError {
             case .securityFailed(message: _):
@@ -212,7 +218,6 @@ extension AuthenticationProviderAdapter {
             default:
                 break
             }
-
         }
         let authError = AuthErrorHelper.toAuthError(error)
         return authError

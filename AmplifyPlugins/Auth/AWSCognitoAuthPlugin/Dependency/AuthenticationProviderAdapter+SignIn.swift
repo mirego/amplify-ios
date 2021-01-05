@@ -138,7 +138,7 @@ extension AuthenticationProviderAdapter {
                                               signOutURIQueryParameters: request.options.signOutQueryParameters)
 
         // Create a navigation controller with an empty UIViewController.
-        let navController = UINavigationController(rootViewController: UIViewController())
+        let navController = FullScreenNavigationUIController(rootViewController: UIViewController())
         navController.isNavigationBarHidden = true
         navController.modalPresentationStyle = .overCurrentContext
 
@@ -226,4 +226,13 @@ extension AuthenticationProviderAdapter {
         return authError
     }
 
+}
+
+private class FullScreenNavigationUIController: UINavigationController {
+
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        viewControllerToPresent.modalPresentationStyle = .fullScreen
+
+        super.present(viewControllerToPresent, animated: flag, completion: completion)
+    }
 }
